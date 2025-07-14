@@ -1,0 +1,59 @@
+
+Table users {
+  id int [pk, increment]
+  email varchar [unique, not null]
+  password_hash varchar [not null]
+  role varchar [note: 'admin, researcher, guest']
+  created_at timestamp
+}
+
+Table genomes {
+  id int [pk, increment]
+  name varchar [not null, unique]
+  species varchar
+  reference_version varchar
+  created_by int [ref: > users.id]
+  created_at timestamp
+}
+
+Table samples {
+  id int [pk, increment]
+  genome_id int [ref: > genomes.id, note: 'Reference genome used for alignment']
+  donor_id varchar [note: 'De-identified individual']
+  collection_date date
+  sample_type varchar [note: 'blood, saliva, tissue, etc.']
+  metadata json
+  collected_by int [ref: > users.id, note: 'User who collected or registered the sample']
+  created_at timestamp
+}
+
+Table sequence_files {
+  id int [pk, increment]
+  sample_id int [ref: > samples.id]
+  file_path varchar
+  file_type varchar [note: 'FASTQ, BAM, CRAM']
+  checksum varchar
+  uploaded_by int [ref: > users.id]
+  uploaded_at timestamp
+}
+
+Table variant_files {
+  id int [pk, increment]
+  sample_id int [ref: > samples.id]
+  genome_id int [ref: > genomes.id, note: 'Compared against this reference genome']
+  file_path varchar
+  file_type varchar [note: 'VCF, JSON, GFF']
+  checksum varchar
+  uploaded_by int [ref: > users.id]
+  uploaded_at timestamp
+}
+
+Table audit_logs {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  action varchar
+  resource_type varchar
+  resource_id int
+  timestamp timestamp
+  details text
+}

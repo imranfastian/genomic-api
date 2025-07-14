@@ -1,0 +1,32 @@
+# Ignore Go build and cache files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Vendor directory (if not using vendoring)
+vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
