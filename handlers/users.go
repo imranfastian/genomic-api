@@ -10,6 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ListUsers godoc
+// @Summary      List users
+// @Description  get all users
+// @Tags         users
+// @Produce      json
+// @Success      200  {array}  models.User
+// @Router       /api/users [get]
 func ListUsers(c *gin.Context) {
 	var users []models.User
 	if err := config.DB.Find(&users).Error; err != nil {
