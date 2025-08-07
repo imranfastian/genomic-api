@@ -14,6 +14,7 @@
   DB_NAME=yourdb
   DB_HOST=db
   DB_PORT=5432
+  PORT=8080
   ```
 
 ## 3. Build and Run with Docker Compose
@@ -34,11 +35,12 @@
   ```sh
   go run main.go
   ```
+- Code changes are reflected live in the running container (with Docker volume mount).
 
 ## 5. Database Initialization
 
-- On first run, the database schema and initial data are loaded from `genomic_schema.dmbl.sql`.
-- To reset the database, run:
+- On first run, the database schema and sample data are loaded from `genomic_schema.dmbl.sql`.
+- To reset the database and reload schema/data, run:
   ```sh
   docker compose down -v
   docker compose --env-file .env up --build
@@ -47,10 +49,32 @@
 ## 6. API Usage
 
 - The API runs at `http://localhost:8080`
-- Use `/login` to obtain a JWT token.
-- Use `/genomes` endpoints for CRUD operations (protected, requires JWT).
+- Swagger UI available at `http://localhost:8080/swagger/index.html`
+- Use `POST /api/login` to obtain a JWT token.
+- All `/api/*` endpoints are protected and require JWT.
 
-## 7. Useful Docker Commands
+### Main Endpoints
+
+- **Genomes:**  
+  `GET /api/genomes`, `POST /api/genomes`, `GET /api/genomes/:id`, `PUT /api/genomes/:id`, `DELETE /api/genomes/:id`
+- **Samples:**  
+  `GET /api/samples`, `POST /api/samples`, `GET /api/samples/:id`, `PUT /api/samples/:id`, `DELETE /api/samples/:id`
+- **Sequence Files:**  
+  `GET /api/sequence`, `POST /api/sequence`, `GET /api/sequence/:id`, `PUT /api/sequence/:id`, `DELETE /api/sequence/:id`
+- **Variant Files:**  
+  `GET /api/variants`, `POST /api/variants`, `GET /api/samples/:id/variants`, `DELETE /api/variants/:id`
+- **Users:**  
+  `GET /api/users`, `POST /api/users`, `GET /api/users/:id`, `PUT /api/users/:id`, `DELETE /api/users/:id`
+
+## 7. Swagger Documentation
+
+- After updating handler swag annotations, regenerate docs:
+  ```sh
+  swag init
+  ```
+- Refresh Swagger UI to see new endpoints.
+
+## 8. Useful Docker Commands
 
 - View running containers:
   ```sh
