@@ -1,4 +1,56 @@
 definitions:
+  models.Genome:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      reference_version:
+        type: string
+      species:
+        type: string
+    type: object
+  models.Sample:
+    properties:
+      collected_by:
+        type: integer
+      collection_date:
+        type: string
+      created_at:
+        type: string
+      donor_id:
+        type: string
+      genome_id:
+        type: integer
+      id:
+        type: integer
+      metadata:
+        description: JSON as raw string or use map[string]interface{}
+        type: string
+      sample_type:
+        type: string
+    type: object
+  models.SequenceFile:
+    properties:
+      checksum:
+        type: string
+      file_path:
+        type: string
+      file_type:
+        type: string
+      id:
+        type: integer
+      sample_id:
+        type: integer
+      uploaded_at:
+        type: string
+      uploaded_by:
+        type: integer
+    type: object
   models.User:
     properties:
       created_at:
@@ -11,12 +63,409 @@ definitions:
         description: admin, researcher, guest, lab_technician
         type: string
     type: object
+  models.VariantFile:
+    properties:
+      checksum:
+        type: string
+      file_path:
+        type: string
+      file_type:
+        type: string
+      genome_id:
+        type: integer
+      id:
+        type: integer
+      sample_id:
+        type: integer
+      uploaded_at:
+        type: string
+      uploaded_by:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
+  /api/genomes:
+    get:
+      description: Get all genomes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Genome'
+            type: array
+      summary: List genomes
+      tags:
+      - genomes
+    post:
+      consumes:
+      - application/json
+      description: Add a new genome record
+      parameters:
+      - description: Genome info
+        in: body
+        name: genome
+        required: true
+        schema:
+          $ref: '#/definitions/models.Genome'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Genome'
+      summary: Create genome
+      tags:
+      - genomes
+  /api/genomes/{id}:
+    delete:
+      description: Delete genome by ID
+      parameters:
+      - description: Genome ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete genome
+      tags:
+      - genomes
+    get:
+      description: Get genome by ID
+      parameters:
+      - description: Genome ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Genome'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get genome
+      tags:
+      - genomes
+    put:
+      consumes:
+      - application/json
+      description: Update genome by ID
+      parameters:
+      - description: Genome ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Genome info
+        in: body
+        name: genome
+        required: true
+        schema:
+          $ref: '#/definitions/models.Genome'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Genome'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update genome
+      tags:
+      - genomes
+  /api/samples:
+    get:
+      description: Get all samples
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Sample'
+            type: array
+      summary: List samples
+      tags:
+      - samples
+    post:
+      consumes:
+      - application/json
+      description: Add a new sample record
+      parameters:
+      - description: Sample info
+        in: body
+        name: sample
+        required: true
+        schema:
+          $ref: '#/definitions/models.Sample'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Sample'
+      summary: Create sample
+      tags:
+      - samples
+  /api/samples/{id}:
+    delete:
+      description: Delete sample by ID
+      parameters:
+      - description: Sample ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete sample
+      tags:
+      - samples
+    get:
+      description: Get sample by ID
+      parameters:
+      - description: Sample ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Sample'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get sample
+      tags:
+      - samples
+    put:
+      consumes:
+      - application/json
+      description: Update sample by ID
+      parameters:
+      - description: Sample ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Sample info
+        in: body
+        name: sample
+        required: true
+        schema:
+          $ref: '#/definitions/models.Sample'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Sample'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update sample
+      tags:
+      - samples
+  /api/samples/{id}/variants:
+    get:
+      description: Get all variant files for a sample
+      parameters:
+      - description: Sample ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.VariantFile'
+            type: array
+      summary: Get sample variants
+      tags:
+      - variants
+  /api/sequence:
+    get:
+      description: Get all sequence files
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SequenceFile'
+            type: array
+      summary: List sequence files
+      tags:
+      - sequence
+    post:
+      consumes:
+      - application/json
+      description: Add a new sequence file record
+      parameters:
+      - description: Sequence file info
+        in: body
+        name: sequence_file
+        required: true
+        schema:
+          $ref: '#/definitions/models.SequenceFile'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.SequenceFile'
+      summary: Create sequence file
+      tags:
+      - sequence
+  /api/sequence/{id}:
+    delete:
+      description: Delete sequence file by ID
+      parameters:
+      - description: Sequence file ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete sequence file
+      tags:
+      - sequence
+    get:
+      description: Get sequence file by ID
+      parameters:
+      - description: Sequence file ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SequenceFile'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get sequence file
+      tags:
+      - sequence
+    put:
+      consumes:
+      - application/json
+      description: Update sequence file by ID
+      parameters:
+      - description: Sequence file ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Sequence file info
+        in: body
+        name: sequence_file
+        required: true
+        schema:
+          $ref: '#/definitions/models.SequenceFile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SequenceFile'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update sequence file
+      tags:
+      - sequence
   /api/users:
     get:
-      description: get all users
+      description: Get all users
       produces:
       - application/json
       responses:
@@ -29,4 +478,171 @@ paths:
       summary: List users
       tags:
       - users
+    post:
+      consumes:
+      - application/json
+      description: Add a new user
+      parameters:
+      - description: User info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Create user
+      tags:
+      - users
+  /api/users/{id}:
+    delete:
+      description: Delete user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete user
+      tags:
+      - users
+    get:
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update user
+      tags:
+      - users
+  /api/variants:
+    get:
+      description: Get all variant files
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.VariantFile'
+            type: array
+      summary: List variant files
+      tags:
+      - variants
+    post:
+      consumes:
+      - application/json
+      description: Add a new variant file record
+      parameters:
+      - description: Variant file info
+        in: body
+        name: variant_file
+        required: true
+        schema:
+          $ref: '#/definitions/models.VariantFile'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.VariantFile'
+      summary: Create variant file
+      tags:
+      - variants
+  /api/variants/{id}:
+    delete:
+      description: Delete variant file by ID
+      parameters:
+      - description: Variant file ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete variant file
+      tags:
+      - variants
 swagger: "2.0"

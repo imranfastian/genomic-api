@@ -46,6 +46,13 @@ func SetupRouter() *gin.Engine {
 		protected.PUT("/samples/:id", handlers.UpdateSample)
 		protected.DELETE("/samples/:id", handlers.DeleteSample)
 
+		// Sequence endpoints
+		protected.GET("/sequence", handlers.ListSequenceFiles)
+		protected.POST("/sequence", handlers.CreateSequenceFile)
+		protected.GET("/sequence/:id", handlers.GetSequenceFile)
+		protected.PUT("/sequence/:id", handlers.UpdateSequenceFile)
+		protected.DELETE("/sequence/:id", handlers.DeleteSequenceFile)
+
 		// Variant file endpoints
 		protected.GET("/variants", handlers.ListVariants)
 		protected.POST("/variants", handlers.CreateVariant)

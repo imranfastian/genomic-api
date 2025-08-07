@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - ./genomic-api/genomic_schema.dmbl.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./genomic_schema.dmbl.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres_api_data:/var/lib/postgresql/data
     ports:
       - "${DB_PORT}:5432"
@@ -32,7 +32,7 @@ services:
       DB_NAME: ${DB_NAME}
     volumes:
       - .:/app
-    command: ["./genomic-api"]
+    command: ["go", "run", "main.go"]
 
 volumes:
   postgres_api_data:
