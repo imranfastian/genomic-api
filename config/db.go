@@ -44,3 +44,15 @@ func InitDB() {
 
 	log.Println("✅ Database connection established.")
 }
+
+// CloseDB closes the database connection
+func CloseDB() {
+	sqlDB, err := DB.DB()
+	if err != nil {
+		log.Printf("❌ Failed to get DB for closing: %v", err)
+		return
+	}
+	if err := sqlDB.Close(); err != nil {
+		log.Printf("❌ Failed to close DB: %v", err)
+	}
+}

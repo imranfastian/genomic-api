@@ -1,7 +1,30 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 5s        # How often to scrape targets (default: 1m, we override to 5s)
+  evaluation_interval: 5s    # How often to evaluate alerting/recording rules
+  scrape_timeout: 4s         # Timeout for each scrape request
+
+# Optional: external labels help when federating or using multiple Prometheus servers
+# external_labels:
+#   cluster: "dev"
 
 scrape_configs:
-  - job_name: 'genomic_api'
+  # Scrape Prometheus itself, so you can monitor it
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['genomic_api:8080']
+      - targets: ["localhost:9090"]
+
+  # Scrape genomic service
+  - job_name: "genomic"
+    metrics_path: /metrics          # default is /metrics, but we set explicitly for clarity
+    scheme: http                    # if TLS is enabled, change to https
+    static_configs:
+      - targets: ["genomic:8080"]
+
+    # Optional: relabel_configs help add labels for better filtering in Grafana
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: "genomic"
+
+# (Optional) If you later add Loki, node exporters, postgres exporters, etc.
+# you can just append more scrape_configs below.

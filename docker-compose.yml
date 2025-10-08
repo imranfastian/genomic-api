@@ -1,27 +1,26 @@
 version: "3.8"
 
 services:
-  db:
+  postgres:
     image: postgres:15
-    container_name: genomic_api_postgres
-    restart: unless-stopped
+    container_name: postgres
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./genomic_schema.dmbl.sql:/docker-entrypoint-initdb.d/init.sql
-      - postgres_api_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "${DB_PORT}:5432"
 
-  api:
+  genomic:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: genomic_api
+    container_name: genomic
     depends_on:
-      - db
+      - postgres
     ports:
       - "${PORT}:8080"
     environment:
@@ -74,6 +73,6 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
 
 volumes:
-  postgres_api_data:
+  postgres_data:
   loki-data:
   grafana-storage:
